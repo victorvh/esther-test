@@ -10,7 +10,9 @@ const server = http.createServer((req, res) => {
   console.log(data);
 
   fs.writeFileSync("./test.json", JSON.stringify(data));
-  res.end("Hello World!");
+
+  const newData = fs.readFileSync("./test.json");
+  res.end(JSON.stringify(JSON.parse(newData as unknown as string)));
 });
 
 server.listen(3000, () => {

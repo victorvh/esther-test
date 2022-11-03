@@ -1,28 +1,36 @@
-import http from "http";
-import fs from "fs";
+import express, { Request, Response } from "express";
+import bodyParser from "body-parser";
+import fs from "node:fs";
+import path from "node:path";
 
-const server = http.createServer((req, res) => {
-  const rawData = fs.readFileSync("./test.json");
-  let data = JSON.parse(rawData as unknown as string);
+import * as url from "node:url";
 
-  data.friends.push({ id: 3, name: "John" });
+import { addFriend } from "./utils.js";
 
-  console.log(data);
+const app = express();
+const port = 8080;
 
-  fs.writeFileSync("./test.json", JSON.stringify(data));
+app.use(bodyParser.urlencoded({ extended: false }));
 
-  const newData = fs.readFileSync("./test.json");
-  res.end(JSON.stringify(JSON.parse(newData as unknown as string)));
+app.use(express.static("public"));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(url.fileURLToPath(new URL(".", import.meta.url))));
 });
 
-server.listen(8080, () => {
+app.post("/formdata", (req: any, res: any) => {
+  const { id, name } = req.body;
+
+  const friend = addFriend({ id: Number(id), name });
+
+  res.send(friend);
+});
+
+app.listen(port, () => {
   fs.writeFile(
     "./test.json",
     JSON.stringify({
-      friends: [
-        { id: 1, name: "John" },
-        { id: 2, name: "Jane" },
-      ],
+      friends: [],
     }),
     { flag: "wx" },
     (err) => {
@@ -34,5 +42,5 @@ server.listen(8080, () => {
     }
   );
 
-  console.log("Server is listening on port 3000");
+  console.log(`Server running on port ${port}`);
 });

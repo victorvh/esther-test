@@ -16,5 +16,23 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(8080, () => {
+  fs.writeFile(
+    "./test.json",
+    JSON.stringify({
+      friends: [
+        { id: 1, name: "John" },
+        { id: 2, name: "Jane" },
+      ],
+    }),
+    { flag: "wx" },
+    (err) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log("File created");
+      }
+    }
+  );
+
   console.log("Server is listening on port 3000");
 });

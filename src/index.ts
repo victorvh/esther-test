@@ -15,6 +15,6 @@ const server = http.createServer((req, res) => {
   res.end(JSON.stringify(JSON.parse(newData as unknown as string)));
 });
 
-server.listen(80, () => {
+server.listen(8080, () => {
   console.log("Server is listening on port 3000");
 });

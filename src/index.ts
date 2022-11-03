@@ -1,22 +1,18 @@
-function p(a: number, b: number) {
-  var d = Math.pow(a, 2) + Math.pow(b, 2);
+import http from "http";
+import fs from "fs";
 
-  var resultat = Math.sqrt(d);
+const server = http.createServer((req, res) => {
+  const rawData = fs.readFileSync("./test.json");
+  let data = JSON.parse(rawData as unknown as string);
 
-  return resultat;
-}
+  data.friends.push({ id: 3, name: "John" });
 
-function hoejden(s: number, m: number) {
-  return s - m;
-}
+  console.log(data);
 
-function p2(h: number, c: number) {
-  var a = Math.sqrt(Math.pow(c, 2) - Math.pow(h, 2));
-  console.log("a is: ", a);
+  fs.writeFileSync("./test.json", JSON.stringify(data));
+  res.end("Hello World!");
+});
 
-  var stigning = h / a;
-
-  return stigning;
-}
-
-console.log(`stigning i procent: ${p2(34, 1000)}`);
+server.listen(3000, () => {
+  console.log("Server is listening on port 3000");
+});
